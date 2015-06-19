@@ -1,0 +1,29 @@
+{
+  "name": "without-jQuery",
+  "version": "0.0.1",
+  "description": "write javascript without jQuery",
+  "main": "index.js",
+  "scripts": {
+    "start": "node scripts/server.js",
+    "build": "gulp build",
+    "prebuild": "npm run clean",
+    "clean": "rm build/* -r"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zcoding/without-jQuery.git"
+  },
+  "keywords": [
+    "js"
+  ],
+  "author": "zcoding",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zcoding/without-jQuery/issues"
+  },
+  "homepage": "https://github.com/zcoding/without-jQuery",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.5.2"
+  }
+}

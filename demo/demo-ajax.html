@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ajax With Promise</title>
+  </head>
+  <body>
+    <div class="m-main"></div>
+    <script src="ajax.js"></script>
+    <script type="text/javascript">
+    var api = ajax('/user/list');
+    api.get({page: 1})
+    .then(function(response) {
+      document.querySelector('.m-main').innerHTML = response;
+    })
+    .catch(function(xhr, error) {
+      console.info(xhr);
+    });
+
+    api.post({name: 'www'})
+    .then(function(response) {
+      var result = JSON.parse(reponse);
+      if (result.code === 0) {
+        console.log('success !');
+      }
+    }).then(function(xhr, error) {
+      console.log(xhr);
+    });
+    </script>
+  </body>
+</html>
