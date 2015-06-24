@@ -14,7 +14,17 @@ var Aja = (function() {
 
   "use strict";
 
-  function Aja() {}
+  function Aja() {
+    return api;
+  }
+
+  var api = {
+    url: function(url) {},
+    data: function(data) {},
+    cache: function(useCache) {},
+    method: function(method) {},
+    on: function(event, handler) {}
+  };
 
   return Aja;
 

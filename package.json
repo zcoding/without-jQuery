@@ -7,7 +7,8 @@
     "start": "node scripts/server.js",
     "build": "gulp build",
     "prebuild": "npm run clean",
-    "clean": "rm build/* -r"
+    "clean": "rm build/* -r",
+    "doc": "gulp document"
   },
   "repository": {
     "type": "git",

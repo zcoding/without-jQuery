@@ -1,7 +1,7 @@
 var animate = (function() {
 
-  var animate = function(element, effect) {};
+  var fn = function(element, effects) {};
 
-  return animate;
+  return fn;
 
 })();
