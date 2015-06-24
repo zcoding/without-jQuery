@@ -1,3 +1,6 @@
+/**
+ * require('utils')
+ */
 function Ajax(url) {
 
   "use strict";
@@ -8,38 +11,42 @@ function Ajax(url) {
 
       var promise = new Promise( function (resolve, reject) {
 
-        var client = new XMLHttpRequest();
+        var http = new XMLHttpRequest();
         var uri = url;
 
-        if (method === 'POST' || method === 'PUT') {
-          client.setHeader('Content-Type', 'application/x-www-form-urlencoded');
-        }
+        var data = null;
 
         if (args && (method === 'POST' || method === 'PUT')) {
-          uri += '?';
-          var argcount = 0;
-          for (var key in args) {
-            if (args.hasOwnProperty(key)) {
-              if (argcount++) {
-                uri += '&';
-              }
-              uri += encodeURIComponent(key) + '=' + encodeURIComponent(args[key]);
-            }
+          if (typeof args === 'string') {
+            data = args;
+          } else {
+            data = utils.query.stringify(args);
+          }
+        } else {
+          if (typeof args === 'string') {
+            uri += '?' + args;
+          } else {
+            uri += '?' + utils.query.stringify(args);
           }
         }
 
-        client.open(method, uri, true);
-        client.send();
+        http.open(method, uri, true);
 
-        client.onload = function () {
+        if (method === 'POST' || method === 'PUT') {
+          http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        }
+
+        http.send(data);
+
+        http.onload = function () {
           if (this.status >= 200 && this.status < 400) {
-            resolve(this.response);
+            resolve(this.responseText);
           } else {
-            reject(this.statusText);
+            reject(this, this.status, this.statusText);
           }
         };
-        client.onerror = function () {
-          reject(this.statusText);
+        http.onerror = function () {
+          reject(this, this.status, this.statusText);
         };
       });
 

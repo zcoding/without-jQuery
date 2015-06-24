@@ -27,6 +27,11 @@ var utils = (function() {
    */
   utils.is = function() {};
 
+  /**
+   * query helper
+   * query.parse(queryString)
+   * query.stringify(queryObject)
+   */
   utils.query = {
     /**
      * query stringify
@@ -105,6 +110,12 @@ var utils = (function() {
   };
 
   // utils.parseJSON => JSON.parse
+
+  utils.extend = function() {};
+
+  utils.each = function() {};
+
+  utils.map = function() {};
 
   return utils;
 
