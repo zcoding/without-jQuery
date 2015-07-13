@@ -39,7 +39,7 @@ Ajax = (url) ->
             # done
           else
             # fail
-      http.send(data)
+      http.send data
       api
 
     api =

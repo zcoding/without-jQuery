@@ -1,21 +1,21 @@
 var effectUtils = {
 
-  show: function() {},
+  show: function(element) {},
 
-  hide: function() {},
+  hide: function(element) {},
 
-  toggle: function() {},
+  toggle: function(element) {},
 
-  fadeIn: function() {},
+  fadeIn: function(element) {},
 
-  fadeOut: function() {},
+  fadeOut: function(element) {},
 
-  fadeToggle: function() {},
+  fadeToggle: function(element) {},
 
-  slideDown: function() {},
+  slideDown: function(element) {},
 
-  slideUp: function() {},
+  slideUp: function(element) {},
 
-  slideToggle: function() {}
+  slideToggle: function(element) {}
 
 };
