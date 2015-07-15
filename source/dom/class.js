@@ -14,7 +14,8 @@ var classHelper = (function() {
     if (modern) {
       element.classList.remove(className);
     } else {
-      element.className = element.className.replace(/(?:^|\s)MyClass(?!\S)/g, '');
+      var matcher = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
+      element.className = element.className.replace(matcher, '');
     }
   }
 
@@ -34,7 +35,7 @@ var classHelper = (function() {
     if (modern) {
       return element.classList.contains(className);
     } else {
-      var matcher = new RegExp('(?:^|\\s)' + className + '(?!\\S)');
+      var matcher = new RegExp('(?:^|\\s)' + className + '(?!\\S)', 'g');
       return element.className.match(matcher) !== null;
     }
   }
