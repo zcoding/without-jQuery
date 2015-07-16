@@ -1,1 +1,1 @@
-console.log('testing...');
+console.log('This project has no tests.');

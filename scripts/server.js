@@ -1,29 +1,57 @@
-var http = require('http');
-var accepts = require('accepts');
+var koa = require('koa');
+var app = koa();
+var router = require('koa-router')();
+var serve = require('koa-static');
+var path = require('path');
+var views = require('co-views');
 
-var PORT = 9090;
+var render = views(__dirname + '/../demo/', {
+  map: { html: 'swig' }
+});
 
-function app(req, res) {
-  var accept = accepts(req);
+function *responseTime(next){
+  var start = new Date;
+  yield next;
+  var ms = new Date - start;
+  console.log('%s %s - %s', this.method, this.url, ms);
+};
 
-  switch(accept.type(['json', 'html'])) {
-    case 'json':
-      res.setHeader('Content-Type', 'application/json');
-      res.write(JSON.stringify({"hello":"world!"}));
-      break;
+function *pageNotFound(next){
+  yield next;
+
+  if (404 != this.status) return;
+
+  // we need to explicitly set 404 here
+  // so that koa doesn't assign 200 on body=
+  this.status = 404;
+
+  switch (this.accepts('html', 'json')) {
     case 'html':
-      res.setHeader('Content-Type', 'text/html');
-      res.write('<b>hello, world!</b>');
+      this.type = 'html';
+      this.body = '<h1>Page Not Found</h1>';
+      break;
+    case 'json':
+      this.body = {
+        message: 'Page Not Found'
+      };
       break;
     default:
-      res.setHeader('Content-Type', 'text/plain');
-      res.write('hello, world!');
-      break;
+      this.type = 'text';
+      this.body = 'Page Not Found';
   }
-
-  res.end();
 }
 
-var server = http.createServer(app);
+router.get('/', function *(next) {
+  this.body = yield render('index');
+});
+router.get('/ajax', function *(next) {
+  this.body = yield render('demo-ajax');
+});
 
-server.listen(PORT);
+app.use(serve(path.resolve(__dirname, '../build')))
+  .use(responseTime)
+  .use(router.routes())
+  .use(router.allowedMethods())
+  .use(pageNotFound);
+
+app.listen(9090);

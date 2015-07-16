@@ -1,4 +1,4 @@
-# require('utils')
+# require "utils"
 
 getXMLHttpRequest = ()->
    if window.XMLHttpRequest
@@ -33,20 +33,18 @@ Ajax = (url) ->
       if method is 'POST' or method is 'PUT'
         http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
 
-      http.onreadystatechange = ()->
-        if http.readyState is 4 # complete
-          if 200 <= http.status < 400
-            # done
-          else
-            # fail
-      http.send data
-      api
+      ajaxPromise = new Promise((resolve, reject)->
+        http.onreadystatechange = ()->
+          if http.readyState is 4 # complete
+            if 200 <= http.status < 400
+              resolve http.responseText
+            else
+              reject new Error("Ajax error.")
+        )
 
-    api =
-      done: ()->
-        this
-      fail: ()->
-        this
+      http.send data
+
+    # 这里直接返回Promise
 
   return {
     get: (data)->
