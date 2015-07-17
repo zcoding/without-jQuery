@@ -47,6 +47,9 @@ router.get('/', function *(next) {
 router.get('/ajax', function *(next) {
   this.body = yield render('demo-ajax');
 });
+router.get('/css', function *(next) {
+  this.body = yield render('demo-css');
+});
 
 app.use(serve(path.resolve(__dirname, '../build')))
   .use(responseTime)

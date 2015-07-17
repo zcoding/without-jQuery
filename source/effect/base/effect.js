@@ -1,3 +1,12 @@
+// 首先要获取style
+function getStyle(element, prop) {
+  if ("getComputedStyle" in window) {
+    return window.getComputedStyle(element, null).getPropertyValue(prop);
+  } else {
+    return element.currentStyle(prop);
+  }
+}
+
 var effectUtils = {
 
   show: function(element) {},
