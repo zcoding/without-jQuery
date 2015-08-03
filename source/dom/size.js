@@ -8,9 +8,21 @@ var sizeUtils = (function() {
 
   function setHeight(element, value) {}
 
-  function width(element, value) {}
+  function width(element, value) {
+    if (typeof value === 'undefined') {
+      return getWidth(element);
+    } else {
+      setWidth(element, value);
+    }
+  }
 
-  function height(element, value) {}
+  function height(element, value) {
+    if (typeof value === 'undefined') {
+      return getHeight(element);
+    } else {
+      setHeight(element, value);
+    }
+  }
 
   function outerWidth(element, withMargin) {} // offsetWidth
 

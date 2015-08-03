@@ -38,7 +38,7 @@ var CSSSD = (function() {
                          style[l] == style[r] ? [ style[t], style[r], style[b] ] :
                          [ style[t], style[r], style[b], style[l] ]).join(' ');
   }
-  // tobi: we can not use native CSSStyleDeclaration ?
+
   function CSSSD(element) {
       var
       style = this,
@@ -46,15 +46,28 @@ var CSSSD = (function() {
       fontSize = getComputedStylePixel(element, 'fontSize');
 
       for (property in currentStyle) {
-          Push.call(style, property == 'styleFloat' ? 'float' : property.replace(/[A-Z]/, function (match) {
+          Push.call(style, property === 'styleFloat' ? 'float' : property.replace(/[A-Z]/, function (match) {
               return '-' + match.toLowerCase();
           }));
 
-          if (property == 'width') style[property] = element.offsetWidth + 'px';
-          else if (property == 'height') style[property] = element.offsetHeight + 'px';
-          else if (property == 'styleFloat') style['float'] = currentStyle[property];
-          else if (/margin.|padding.|border.+W/.test(property) && style[property] != 'auto') style[property] = Math.round(getComputedStylePixel(element, property, fontSize)) + 'px';
-          else style[property] = currentStyle[property];
+          switch (property) {
+            case 'width':
+              style[property] = element.offsetWidth + 'px';
+              break;
+            case 'height':
+              style[property] = element.offsetHeight + 'px';
+              break;
+            case 'styleFloat':
+              style['float'] = currentStyle[property];
+              break;
+            default:
+              if (/margin.|padding.|border.+W/.test(property) && style[property] !== 'auto') {
+                style[property] = Math.round(getComputedStylePixel(element, property, fontSize)) + 'px';
+              } else {
+                style[property] = currentStyle[property];
+              }
+          }
+
       }
 
       setShortStyleProperty(style, 'margin');
@@ -81,7 +94,7 @@ var CSSSD = (function() {
 })();
 
 function getStyles(element) {
-  if ("getComputedStyle" in window) {
+  if ("getComputedStyle" in element.ownerDocument.defaultView) {
     return element.ownerDocument.defaultView.getComputedStyle(element, null);
   } else { // 兼容IE8及以下版本
     return new CSSSD(element);
