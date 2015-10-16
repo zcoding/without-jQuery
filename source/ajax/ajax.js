@@ -1,92 +1,90 @@
-/**
- * require('utils')
- */
+var XHRcache = null;
 
-function getXMLHttpRequest()
-{
-   if (window.XMLHttpRequest) {
-       return new window.XMLHttpRequest;
-   } else {
-       try {
-           return new ActiveXObject("MSXML2.XMLHTTP.3.0");
-       }
-       catch(ex) {
-           return null;
-       }
-   }
+function getXMLHttpRequest() {
+  if (XHRcache !== null) {
+    return XHRcache;
+  }
+  if (window.XMLHttpRequest) {
+    XHRcache = window.XMLHttpRequest;
+  } else {
+    try {
+      XHRcache = new ActiveXObject("MSXML2.XMLHTTP.3.0");
+    } catch (ex) {
+      XHRcache = null;
+    }
+  }
+  return XHRcache;
 }
 
-var Ajax = function(url) {
+function Ajax(url) {
 
   "use strict";
 
   var core = {
-    ajax: function(method, url, args) {
 
-      var http = getXMLHttpRequest();
+    ajax : function (method, url, args) {
 
-      var data = null;
+      var promise = new iPromise( function (_resolve, _reject) {
 
-      var argsType = typeof args;
-
-      if (argsType === 'string') {
-        if (method === 'POST' || method === 'PUT') {
-          data = args;
-        } else {
-          url += '?' + args;
+        var http = getXMLHttpRequest();
+        if (http === null) {
+          throw new TypeError('XHR NOT SUPPORTED');
         }
-      } else if (argsType !== 'undefined') {
-        if (method === 'POST' || method === 'PUT') {
-          data = utils.query.stringify(args);
-        } else {
-          url += '?' + utils.query.stringify(args);
-        }
-      }
 
-      http.open(method, url, true);
+        var uri = url;
 
-      if (method === 'POST' || method === 'PUT') {
-        http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      }
+        var data = null;
 
-      http.onreadystatechange = function() {
-        if (http.readyState === 4) { // complete
-          if (http.status >= 200 && http.status < 400) {
-            // done
+        if (args && (method === 'POST' || method === 'PUT')) {
+          if (typeof args === 'string') {
+            data = args;
           } else {
-            // fail
+            data = utils.query.stringify(args);
+          }
+        } else {
+          if (typeof args === 'string') {
+            uri += '?' + args;
+          } else {
+            uri += '?' + utils.query.stringify(args);
           }
         }
-      }
 
-      http.send(data);
+        http.open(method, uri, true);
 
-      retrun api;
+        if (method === 'POST' || method === 'PUT') {
+          http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        }
 
+        http.send(data);
+
+        http.onload = function () {
+          if (this.status >= 200 && this.status < 400) {
+            _resolve(this.responseText);
+          } else {
+            _reject(this, this.status, this.statusText);
+          }
+        };
+        http.onerror = function () {
+          _reject(this, this.status, this.statusText);
+        };
+      });
+
+      return promise;
     }
   };
 
-  var api = {
-    done: function() {
-      return this;
-    },
-    fail: function() {
-      return this;
-    }
-  }
-
   return {
-    "get": function(data) {
-      return core.ajax('GET', url, data);
+    'get' : function(args) {
+      return core.ajax('GET', url, args);
     },
-    "post": function(data) {
-      return core.ajax('POST', url, data);
+    'post' : function(args) {
+      return core.ajax('POST', url, args);
     },
-    "put": function(data) {
-      return core.ajax('PUT', url, data);
+    'put' : function(args) {
+      return core.ajax('PUT', url, args);
     },
-    "delete": function(data) {
-      core.ajax('DELETE', url, data)
+    'delete' : function(args) {
+      return core.ajax('DELETE', url, args);
     }
   };
 

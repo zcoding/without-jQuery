@@ -1,36 +1,38 @@
-var offsetUtils = (function() {
+(function(handler) {
 
   // getBoundingClientRect
 
-  function offsetTop(element, value) {
-    if (typeof value === 'undefined') {
-      return element.offsetTop;
+  handler.extend('offsetTop', function(value) {
+    if (value) {
+      this.ele.offsetTop = value;
+      return this;
     } else {
-      element.offsetTop = value;
+      return this.ele.offsetTop;
     }
-  };
+  });
 
-  function offsetLeft(element, value) {
-    if (typeof value === 'undefined') {
-      return element.offsetLeft;
+  handler.extend('offsetLeft', function(value) {
+    if (value) {
+      this.ele.offsetLeft = value;
+      return this;
     } else {
-      element.offsetLeft = value;
+      return this.ele.offsetLeft;
     }
-  }
+  });
 
-  function offset(element, left, top) {
-    if (typeof value === 'undefined') {
-      return {left: element.offsetLeft, top: element.offsetTop};
+  handler.extend('offset', function(left, top) {
+    if (left && top) {
+      this.ele.offsetLeft = left;
+      this.ele.offsetTop = top;
+      return this;
     } else {
-      element.offsetLeft = left;
-      element.offsetTop = top;
+      left = this.ele.offsetLeft;
+      top = this.ele.offsetTop;
+      return {
+        left: left,
+        top: top
+      };
     }
-  }
+  });
 
-  return {
-    offsetTop: offsetTop,
-    offsetLeft: offsetLeft,
-    offset: offset
-  };
-
-})();
+})(J);

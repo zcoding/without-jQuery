@@ -1,4 +1,4 @@
-var cookieUtils = (function() {
+(function(exports) {
 
   var encode = encodeURIComponent, decode = decodeURIComponent;
 
@@ -54,12 +54,10 @@ var cookieUtils = (function() {
     return aKeys;
   };
 
-  return {
-    getItem: getItem,
-    setItem: setItem,
-    removeItem: removeItem,
-    hasItem: hasItem,
-    keys: getKeys
-  };
+  exports.getItem = getItem;
+  exports.setItem = setItem;
+  exports.removeItem = removeItem;
+  exports.hasItem = hasItem;
+  exports.getKeys = getKeys;
 
-})();
+})(J);

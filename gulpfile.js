@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
-var coffee = require('gulp-coffee');
 
 var tasks = ['ajax', 'css', 'data', 'dom', 'effect', 'event', 'ready', 'selector', 'utils'];
 
@@ -25,3 +24,13 @@ gulp.task('build-in-one', function() {});
 gulp.task('build-doc', function() {});
 
 gulp.task('dev', function() {});
+
+var core_sources = ['core', 'utils/utils', 'ready/ready', 'dom/attr', 'dom/class', 'dom/size', 'dom/scroll', 'dom/offset', 'css/style', 'ajax/aja'].map(function(file) {
+  return './source/' + file + '.js';
+});
+
+gulp.task('core', function() {
+  return gulp.src(core_sources)
+    .pipe(concat('j.js', {newLine: '\n'}))
+    .pipe(gulp.dest('build'));
+});

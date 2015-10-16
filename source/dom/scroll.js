@@ -1,69 +1,47 @@
-/**
- * 兼容性：IE8/IE8+
- */
-var scrollUtils = (function() {
+(function(handler) {
 
-  function getScrollTop() {
-    return window['pageYOffset'] || document.documentElement['scrollTop'];
-  }
-
-  function getScrollLeft() {
-    return window['pageXOffset'] || document.documentElement['scrollLeft'];
-  }
-
-  function setScrollTop(value) {
-    window.scrollTo(getScrollLeft(), value);
-  }
-
-  function setScrollLeft(value) {
-    window.scrollTo(value, getScrollTop());
-  }
-
-  function getElementScrollTop(element) {
-    return element.scrollTop;
-  }
-
-  function getElementScrollLeft(element) {
-    return element.scrollLeft;
-  }
-
-  function setElementScrollTop(element, value) {
-    element.scrollTop = value;
-  }
-
-  function setElementScrollLeft(element, value) {
-    element.scrollLeft = value;
-  }
-
-  function scrollTop(element, value) {
-    if (value === undefined) {
-      return element === window ? getScrollTop() : getElementScrollTop(element);
+  handler.scrollTop = function(value) {
+    if (value) {
+      window.scrollTo(handler.scrollLeft(), value);
+      return handler;
     } else {
-      return element === window ? setScrollTop(value) : setElementScrollTop(element, value);
+      return window['pageYOffset'] || document.documentElement['scrollTop'];
     }
-  }
+  };
 
-  function scrollLeft(element, value) {
-    if (value === undefined) {
-      return element === window ? getScrollLeft() : getElementScrollLeft(element);
+  handler.scrollLeft = function(value) {
+    if (value) {
+      window.scrollTo(value, handler.scrollTop());
+      return handler;
     } else {
-      return element === window ?  setScrollLeft(value) : setElementScrollLeft(element, value);
+      return window['pageXOffset'] || document.documentElement['scrollLeft'];
     }
-  }
+  };
 
-  function scrollTo(element, left, top) {
-    if (element === window) {
-      window.scrollTo(left, top);
+  handler.scrollTo = function(left, top) {
+    window.scrollTo(left, top);
+  };
+
+  handler.extend('scrollLeft', function(value) {
+    if (value) {
+      this.ele.scrollLeft = value;
+      return this;
     } else {
-      setElementScrollLeft(element, left);
-      setElementScrollTop(element, top);
+      return this.ele.scrollLeft;
     }
-  }
+  });
 
-  return {
-    scrollTop: scrollTop,
-    scrollLeft: scrollLeft,
-    scrollTo: scrollTo
-  }
+  handler.extend('scrollTop', function(value) {
+    if (value) {
+      this.ele.scrollTop = value;
+      return this;
+    } else {
+      return this.ele.scrollTop;
+    }
+  });
 
-})();
+  handler.extend('scrollTo', function(left, top) {
+    return this.scrollLeft(left).scrollTop(top);
+  });
+
+})(J);

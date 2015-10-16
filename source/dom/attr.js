@@ -1,15 +1,21 @@
-var attrUtils = {
-  attr: function(element, attr, value) {
-    if (typeof value === 'undefined') {
-      return element.getAttribute(attr);
+(function(handler) {
+
+  handler.extend('attr', function(attr, value) {
+    if (value) {
+      this.ele.setAttribute(attr, value);
+      return this;
     } else {
-      element.setAttribute(attr, value);
+      return this.ele.getAttribute(attr);
     }
-  },
-  hasAttr: function(element, attr) {
-    return element.hasAttribute(attr);
-  },
-  removeAttr: function(element, attr) {
-    element.removeAttribute(attr);
-  }
-};
+  });
+
+  handler.extend('hasAttr', function(attr) {
+    return this.ele.hasAttribute(attr);
+  });
+
+  handler.extend('removeAttr', function(attr) {
+    this.ele.removeAttribute(attr);
+    return this;
+  });
+
+})(J);

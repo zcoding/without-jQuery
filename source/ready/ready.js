@@ -1,15 +1,11 @@
-var ready = (function() {
+(function(handler) {
 
   document.removeEventListener('DOMContentLoaded');
 
-  var load = new Promise(function(resolve, reject) {
+  handler.ready = new iPromise(function(_resolve, _reject) {
     document.addEventListener('DOMContentLoaded', function() {
-      resolve('loaded');
+      _resolve('loaded');
     });
   });
 
-  return function (cb) {
-    load.then(cb);
-  };
-
-})();
+})(J);

@@ -1,38 +1,29 @@
-var sizeUtils = (function() {
+(function(handler) {
 
-  function getWidth(element) {}
-
-  function getHeight(element) {}
-
-  function setWidth(element, value) {}
-
-  function setHeight(element, value) {}
-
-  function width(element, value) {
-    if (typeof value === 'undefined') {
-      return getWidth(element);
+  handler.extend('width', function(_width) {
+    if (_width) {
+      this.ele.style.width = _width;
+      return this;
     } else {
-      setWidth(element, value);
+      return this.ele.offsetWidth;
     }
-  }
+  });
 
-  function height(element, value) {
-    if (typeof value === 'undefined') {
-      return getHeight(element);
+  handler.extend('height', function(_height) {
+    if (_height) {
+      this.ele.style.height = _height;
+      return this;
     } else {
-      setHeight(element, value);
+      return this.ele.offsetHeight;
     }
-  }
+  });
 
-  function outerWidth(element, withMargin) {} // offsetWidth
+  handler.extend('innerWidth', function() {
+    return this.ele.clientWidth;
+  });
 
-  function innerWidth() {} // clientWidth
+  handler.extend('innerHeight', function() {
+    return this.ele.clientHeight;
+  });
 
-  return {
-    width: width,
-    height: height,
-    outerWidth: outerWidth,
-    innerWidth: innerWidth
-  };
-
-})();
+})(J);
