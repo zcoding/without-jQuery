@@ -1,4 +1,4 @@
-(function(exports) {
+(function(handler) {
 
   var encode = encodeURIComponent, decode = decodeURIComponent;
 
@@ -54,10 +54,12 @@
     return aKeys;
   };
 
-  exports.getItem = getItem;
-  exports.setItem = setItem;
-  exports.removeItem = removeItem;
-  exports.hasItem = hasItem;
-  exports.getKeys = getKeys;
+  handler.cooker = {
+    getItem: getItem,
+    setItem: setItem,
+    removeItem: removeItem,
+    hasItem: hasItem,
+    getKeys: getKeys
+  };
 
 })(J);

@@ -46,6 +46,9 @@
     if (!cbs) {
       cbs = this.event_callbacks[eventType] = [];
       attachEvent(this.ele, eventType, function(event) {
+        if (event.type === 'scroll') {
+          // TODO: 对scroll事件做优化
+        }
         cbs.forEach(function(cb) {
           cb.call($this, event);
         });

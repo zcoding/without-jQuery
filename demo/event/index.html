@@ -6,7 +6,7 @@
   <style>
   .box {
     width: 300px;
-    height: 300px;
+    height: 3000px;
     background: #EEE;
     border: 1px solid #888;
   }
@@ -18,6 +18,7 @@
   <script src="../../source/utils/array.js"></script>
   <script src="../../source/event/event.js"></script>
   <script src="../../source/event/touch.js"></script>
+  <script src="../../source/event/mousewheel.js"></script>
   <script>
   $div = J(document.getElementById('test'));
   $div.on('swipeup', function(event) {
@@ -28,6 +29,11 @@
     console.log('left');
   }).on('swiperight', function(event) {
     console.log('right');
+  }).on('custommousewheel', function(event) {
+    console.log(event);
+  });
+  J(window).on('scroll', function(event) {
+    console.log('scrolling...');
   });
   </script>
 </body>

@@ -2,20 +2,13 @@
 
   var $doc = handler(document);
 
-  var swipeEvent = document.createEvent('Event');
-  swipeEvent.initEvent('swipe', true, true);
+  var eventMap = {};
 
-  var swipeUpEvent = document.createEvent('Event');
-  swipeUpEvent.initEvent('swipeup', true, true);
+  var eventList = ['swip', 'swipeup', 'swipedown', 'swipeleft', 'swiperight', 'drag', 'dragstart', 'dragend', 'tab', 'doubletab', 'hold', 'rotate'];
 
-  var swipeDownEvent = document.createEvent('Event');
-  swipeDownEvent.initEvent('swipedown', true, true);
-
-  var swipeLeftEvent = document.createEvent('Event');
-  swipeLeftEvent.initEvent('swipeleft', true, true);
-
-  var swipeRightEvent = document.createEvent('Event');
-  swipeRightEvent.initEvent('swiperight', true, true);
+  handler.each(eventList, function(eventName) {
+    eventMap[eventName] = handler.event(eventName);
+  });
 
   var startX = 0, startY = 0;
 
@@ -34,19 +27,19 @@
     var deltaY = touches[0].pageY - startY;
     if (deltaX > 50 && Math.abs(deltaY) < deltaX) {
       stop = true;
-      event.originalEvent.target.dispatchEvent(swipeRightEvent);
+      event.originalEvent.target.dispatchEvent(eventMap['swiperight']);
     }
     if (deltaX < -50 && Math.abs(deltaY) < Math.abs(deltaX)) {
       stop = true;
-      event.originalEvent.target.dispatchEvent(swipeLeftEvent);
+      event.originalEvent.target.dispatchEvent(eventMap['swipeleft']);
     }
     if (deltaY > 50 && Math.abs(deltaX) < deltaY) {
       stop = true;
-      event.originalEvent.target.dispatchEvent(swipeDownEvent);
+      event.originalEvent.target.dispatchEvent(eventMap['swipedown']);
     }
     if (deltaY < -50 && Math.abs(deltaX) < Math.abs(deltaY)) {
       stop = true;
-      event.originalEvent.target.dispatchEvent(swipeUpEvent);
+      event.originalEvent.target.dispatchEvent(eventMap['swipeup']);
     }
   });
 
