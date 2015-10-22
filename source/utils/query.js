@@ -1,12 +1,12 @@
 (function(handler) {
 
-    var decodeC = window.decodeURIComponent
-    , encodeC = window.encodeURIComponent
-    , oprtt = Object.prototype
-    , hasOwn = oprtt.hasOwnProperty
-    , isArray = Array.isArray ? Array.isArray : function(obj) {
-      return oprtt.toString.call(obj) === '[object Array]';
-    };
+  var decodeC = window.decodeURIComponent
+  , encodeC = window.encodeURIComponent
+  , oprtt = Object.prototype
+  , hasOwn = oprtt.hasOwnProperty
+  , isArray = Array.isArray ? Array.isArray : function(obj) {
+    return oprtt.toString.call(obj) === '[object Array]';
+  };
 
   handler.query = {
     /**

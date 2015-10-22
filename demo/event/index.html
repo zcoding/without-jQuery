@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>测试事件系统</title>
+  <style>
+  .box {
+    width: 300px;
+    height: 300px;
+    background: #EEE;
+    border: 1px solid #888;
+  }
+  </style>
+</head>
+<body>
+  <div class="box" id="test"></div>
+  <script src="../../source/core-wap.js"></script>
+  <script src="../../source/utils/array.js"></script>
+  <script src="../../source/event/event.js"></script>
+  <script src="../../source/event/touch.js"></script>
+  <script>
+  $div = J(document.getElementById('test'));
+  $div.on('swipeup', function(event) {
+    console.log('up');
+  }).on('swipedown', function(event) {
+    console.log('down');
+  }).on('swipeleft', function(event) {
+    console.log('left');
+  }).on('swiperight', function(event) {
+    console.log('right');
+  });
+  </script>
+</body>
+</html>

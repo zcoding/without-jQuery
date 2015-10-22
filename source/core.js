@@ -10,6 +10,10 @@ window.J = (function() {
 
   wrapper.support = {};
 
+  wrapper.fuck = {
+    ie: false
+  };
+
   wrapper.extend = function(key, value) {
     Fuck.prototype[key] = value;
   };
