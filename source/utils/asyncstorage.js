@@ -1,52 +1,65 @@
 // 使用IndexedDB作为本地存储
+
 (function(handler, win) {
 
-  win.indexedDB = win.indexedDB || win.webkitIndexedDB || win.mozIndexedDB || win.OIndexedDB || win.msIndexedDB;
-  win.IDBTransaction = win.IDBTransaction || win.webkitIDBTransaction || win.msIDBTransaction || {READ_WRITE: "readwrite"};
-  win.IDBKeyRange = win.IDBKeyRange || win.webkitIDBKeyRange || win.msIDBKeyRange;
+  var asyncStorage = {
+    version: 1
+  };
 
-  var support = handler.support.indexedDB = win['indexedDB'];
+  asyncStorage.indexedDB = win.indexedDB || win.mozIndexedDB || win.webkitIndexedDB || win.msIndexedDB;
+  asyncStorage.IDBTransaction = win.IDBTransaction || win.webkitIDBTransaction || win.msIDBTransaction || {READ_WRITE: "readwrite"};
+  asyncStorage.IDBKeyRange = win.IDBKeyRange || win.webkitIDBKeyRange || win.msIDBKeyRange;
+
+  var support = handler.support.indexedDB = !!asyncStorage['indexedDB'];
 
   if (!support) return;
 
-  var iPromise = handler.iPromise || Promise;
+  function openDataErrorCallback(event) {
+    console.error("Cannot open database. Error: " + event.target.errorCode);
+  }
 
-  var db;
+  // function openDatabase(dbName) {
+  //   var openDBRequest = asyncStorage.indexedDB.open(dbName);
+  //   openDBRequest.onerror = openDataErrorCallback;
+  //   openDBRequest.onsuccess = function(event) {
+  //     asyncStorage.db = openDBRequest.result;
+  //   };
+  // }
 
-  var request = win.indexedDB.open("mydb", 1);
+  function openDatabase(dbName, version) {
+    asyncStorage.version = version || 1;
+    // var deleteDBRequest = asyncStorage.indexedDB.deleteDatabase(dbName);
+    // deleteDBRequest.onsuccess = function (event) {
+      var openDBRequest = asyncStorage.indexedDB.open(dbName, asyncStorage.version);
+      openDBRequest.onerror = openDataErrorCallback;
+      openDBRequest.onsuccess = function(event) {
+        asyncStorage.db = openDBRequest.result;
+        // 数据增删改查
+      };
+      openDBRequest.onupgradeneeded = function(event) {
+        var db = event.currentTarget.result;
+        // 初始化数据库表结构
+        db.createObjectStore('orderList', { keyPath: 'id' });
+        db.createObjectStore('userList', { keyPath: 'id' });
+      };
+    // };
+    // deleteDBRequest.onerror = function(err) {
+    //   console.error("Cannot delete database. Error: " + err);
+    // };
+  }
 
-  request.onerror = function(event) {
-    console.error('Cannot open an IndexedDB connection.');
+  asyncStorage.use = function(dbName) {
+    openDatabase(dbName);
   };
-  request.onsuccess = function(event) {
-    db = event.target.result;
-    db.onerror = function(event) {
-      console.error("Database error: " + event.target.errorCode);
-    };
-  };
-  request.onupgradeneeded = function(event) {
-    db = event.target.result;
-    if(!db.objectStoreNames.contains('shit')) {
-      db.createObjectStore('shit', { keyPath: 'id' });
-    }
+
+  asyncStorage.save = function() {
+    var db = asyncStorage.db;
+    var transaction = db.transaction('cache', 'readwrite');
+    var store = transaction.objectStore('cache');
+    // store.add();
   };
 
-  var asyncStorage = {};
-
-  asyncStorage.save = function(name, value) {
-    return new iPromise(function(_resolve, _reject) {
-      var transaction = db.transaction(name, 'readwrite');
-      var store = transaction.objectStore(name);
-      store.add(value);
-    });
-  };
-
-  asyncStorage.find = function(name, where) {
-    return new iPromise(function(_resolve, _reject) {
-      var transaction = db.transaction(name, 'readonly');
-      var store = transaction.objectStore(name);
-    });
-  };
+  asyncStorage.find = function(name, where) {};
 
   asyncStorage.remove = function(name, where) {};
 

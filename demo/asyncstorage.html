@@ -10,7 +10,18 @@
   <script src="../source/utils/asyncstorage.js"></script>
 
   <script>
-
+  J.store.open('om')
+  .then(function(db) {
+    return db.save('orderList', [{id: '12345678', seller: 'wuwuwu'}, {id: '23333', seller: 'huhuhu'}]);
+  })
+  .then(function(db) {
+    return db.find('orderList', {seller: 'wu'}).then(function(result) {
+      return db.save('orderListTemp', result);
+    });
+  })
+  .then(function(db) {
+    return db.close();
+  });
   </script>
 </body>
 </html>

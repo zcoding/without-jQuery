@@ -18,9 +18,14 @@
     }
   }
 
+  /**
+   * Event wrapper
+   * 封装原生事件，解决常用属性的兼容性，添加自定义数据属性
+   */
   function JEvent(originalEvent, data) {
     this.originalEvent = originalEvent;
     this.data = data;
+    this.type = '';
   }
 
   /**

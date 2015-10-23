@@ -1,5 +1,5 @@
-// 直接使用querySelector和querySelectorAll
-// 对部分CSS3选择器进行拓展
+// 选择器引擎（只在不支持querySelectorAll的情况下引入）
 (function(handler) {
+
 
 })(J);
