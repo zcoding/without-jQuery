@@ -1,5 +1,9 @@
-window.J = (function() {
+(function(win) {
 
+  /**
+   * @constructor
+   * JDOM
+   */
   function JDOM(selector) {
     if (selector instanceof HTMLElement) {
       this.ele = selector;
@@ -12,6 +16,8 @@ window.J = (function() {
   var wrapper = function(selector) {
     return new JDOM(selector);
   };
+
+  wrapper.TYPE = 'JDOM';
 
   wrapper.support = {};
 
@@ -40,6 +46,6 @@ window.J = (function() {
     JDOM.prototype[key] = value;
   };
 
-  return wrapper;
+  win.J = wrapper;
 
-})();
+})(window);

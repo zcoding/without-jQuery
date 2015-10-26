@@ -4,11 +4,8 @@
   "description": "write javascript without jQuery",
   "main": "index.js",
   "scripts": {
-    "start": "node --harmony scripts/server.js",
-    "build": "gulp build",
-    "prebuild": "npm run clean",
-    "clean": "rm build/* -r",
-    "doc": "gulp build-doc"
+    "start": "node scripts/server.js",
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",
@@ -24,12 +21,9 @@
   },
   "homepage": "https://github.com/zcoding/without-jQuery",
   "devDependencies": {
-    "co-views": "^1.0.0",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.5.2",
     "koa": "^0.21.0",
-    "koa-router": "^5.1.2",
-    "koa-static": "^1.4.9",
-    "swig": "^1.4.2"
+    "koa-static": "^1.4.9"
   }
 }

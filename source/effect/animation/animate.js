@@ -1,7 +1,5 @@
-var animate = (function() {
+(function(handler) {
 
-  var fn = function(element, effects) {};
+  handler.extend('animate', function() {});
 
-  return fn;
-
-})();
+})(J);

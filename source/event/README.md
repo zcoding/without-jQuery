@@ -25,3 +25,7 @@
 + `rotate`
 + `pinch`
 + `hold`
+
+注意：
+1. 如果只兼容移动端，请使用tab代替click
+2. 如果要兼容移动端和PC端，请使用fastclick
