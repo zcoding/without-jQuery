@@ -1,106 +1,37 @@
-(function(wrapper) {
+(function(handler) {
 
-  var support = wrapper.support.getComputedStyle = !!(document.defaultView && document.defaultView["getComputedStyle"]);
+  var support = handler.support.getComputedStyle = !!(document.defaultView && document.defaultView["getComputedStyle"]);
 
-  var Push = Array.prototype.push;
+  var getStyles;
 
-  function getComputedStylePixel(element, property, fontSize) {
-    var value = element.currentStyle[property].match(/([\d\.]+)(%|cm|em|in|mm|pc|pt|)/) || [0, 0, ''],
-      size = value[1],
-      suffix = value[2],
-      rootSize;
-
-    fontSize = fontSize != null ? fontSize : /%|em/.test(suffix) && element.parentElement ? getComputedStylePixel(element.parentElement, 'fontSize', null) : 16;
-    rootSize = property == 'fontSize' ? fontSize : /width/i.test(property) ? element.clientWidth : element.clientHeight;
-
-    return suffix == '%' ? size / 100 * rootSize :
-      suffix == 'cm' ? size * 0.3937 * 96 :
-      suffix == 'em' ? size * fontSize :
-      suffix == 'in' ? size * 96 :
-      suffix == 'mm' ? size * 0.3937 * 96 / 10 :
-      suffix == 'pc' ? size * 12 * 96 / 72 :
-      suffix == 'pt' ? size * 96 / 72 :
-      size;
-  }
-
-  function setShortStyleProperty(style, property) {
-    var borderSuffix = property == 'border' ? 'Width' : '',
-      t = property + 'Top' + borderSuffix,
-      r = property + 'Right' + borderSuffix,
-      b = property + 'Bottom' + borderSuffix,
-      l = property + 'Left' + borderSuffix;
-
-    style[property] = (style[t] == style[r] && style[t] == style[b] && style[t] == style[l] ? [style[t]] :
-      style[t] == style[b] && style[l] == style[r] ? [style[t], style[r]] :
-      style[l] == style[r] ? [style[t], style[r], style[b]] :
-      [style[t], style[r], style[b], style[l]]).join(' ');
-  }
-
-  function CSSSD(element) {
-    var style = this,
-      currentStyle = element.currentStyle,
-      fontSize = getComputedStylePixel(element, 'fontSize');
-
-    for (property in currentStyle) {
-      Push.call(style, property === 'styleFloat' ? 'float' : property.replace(/[A-Z]/, function(match) {
-        return '-' + match.toLowerCase();
-      }));
-
-      switch (property) {
-        case 'width':
-          style[property] = element.offsetWidth + 'px';
-          break;
-        case 'height':
-          style[property] = element.offsetHeight + 'px';
-          break;
-        case 'styleFloat':
-          style['float'] = currentStyle[property];
-          break;
-        default:
-          if (/margin.|padding.|border.+W/.test(property) && style[property] !== 'auto') {
-            style[property] = Math.round(getComputedStylePixel(element, property, fontSize)) + 'px';
-          } else {
-            style[property] = currentStyle[property];
-          }
-      }
-
-    }
-
-    setShortStyleProperty(style, 'margin');
-    setShortStyleProperty(style, 'padding');
-    setShortStyleProperty(style, 'border');
-
-    style.fontSize = Math.round(fontSize) + 'px';
-  }
-
-  CSSSD.prototype = {
-    constructor: CSSSD,
-    getPropertyValue: function(property) {
-      return this[property.replace(/-\w/g, function(match) {
-        return match[1].toUpperCase();
-      })];
-    },
-    item: function(index) {
-      return this[index];
-    }
-  };
-
-  if (support) {
-    wrapper.getStyles = function(element) {
-      return element.ownerDocument.defaultView.getComputedStyle(element, null);
-    };
-  } else {
-    wrapper.getStyles = function(element) {
+  if (!support && !handler.fuck.ie) {
+    getStyles = function(element) {
       return new CSSSD(element);
     };
+  } else {
+    getStyles = function(element) {
+      return element.ownerDocument.defaultView.getComputedStyle(element, null);
+    };
   }
 
-  wrapper.setStyles = function(element, styles) {
+  function setStyles (element, styles) {
     for (var s in styles) {
       if (styles.hasOwnProperty(s)) {
         element.style[s] = styles[s];
       }
     }
   }
+
+  handler.extend('css', function(name, value) {
+    if (handler.is('plainObject', name)) {
+      setStyles(this.ele, name);
+      return this;
+    } else if (value) {
+      this.ele.style[name] = value;
+      return this;
+    } else {
+      return getStyles(this.ele)[name];
+    }
+  });
 
 })(J);

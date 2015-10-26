@@ -2,6 +2,8 @@
 
   "use strict";
 
+  handler.noop = function() {};
+
   var supportIsArray = handler.support.isArray = !!Array['isArray'];
 
   var win = window
@@ -76,6 +78,10 @@
         }
     }
     return list;
+  };
+
+  handler.trim = function(str) {
+    return str == null ? "" : String.prototype.trim.call(str);
   };
 
 })(J);
