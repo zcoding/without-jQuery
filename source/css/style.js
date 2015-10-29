@@ -2,17 +2,13 @@
 
   var support = handler.support.getComputedStyle = !!(document.defaultView && document.defaultView["getComputedStyle"]);
 
-  var getStyles;
-
-  if (!support && !handler.fuck.ie) {
-    getStyles = function(element) {
-      return new CSSSD(element);
-    };
-  } else {
-    getStyles = function(element) {
-      return element.ownerDocument.defaultView.getComputedStyle(element, null);
-    };
-  }
+  var getStyles = function(element) {
+    var view = element.ownerDocument.defaultView;
+    if (!view.opener) {
+      view = window;
+    }
+    return view.getComputedStyle(element);
+  };
 
   function setStyles (element, styles) {
     for (var s in styles) {
@@ -30,7 +26,8 @@
       this.ele.style[name] = value;
       return this;
     } else {
-      return getStyles(this.ele)[name];
+      var computed = getStyles(this.ele);
+      return computed.getPropertyValue(name) || computed[name];
     }
   });
 

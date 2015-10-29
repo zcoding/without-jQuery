@@ -5,7 +5,7 @@
       this.ele.style.width = _width;
       return this;
     } else {
-      return this.ele.offsetWidth;
+      return this.ele.style.width ? parseInt(this.ele.style.width) : parseInt(this.css('width'));
     }
   });
 
@@ -14,7 +14,7 @@
       this.ele.style.height = _height;
       return this;
     } else {
-      return this.ele.offsetHeight;
+      return this.ele.style.height ? parseInt(this.ele.style.height) : parseInt(this.css('height'));
     }
   });
 

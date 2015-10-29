@@ -9,25 +9,31 @@
   if (support) {
     addClass = function(element, classes) {
       classes = classes.split(classSplitReg);
+      var classList = element.classList;
       classes.forEach(function(klass) {
-        element.classList.add(klass);
+        classList.add(klass);
       });
       return element;
     };
 
     removeClass = function(element, classes) {
       classes = classes.split(classSplitReg);
+      var classList = element.classList;
       classes.forEach(function(klass) {
-        element.classList.remove(klass);
+        classList.remove(klass);
       });
       return element;
     };
 
     hasClass = function(element, classes) {
+      if (element.nodeType !== 1) {
+        return false;
+      }
       classes = classes.split(classSplitReg);
       var result = true;
+      var classList = element.classList;
       for (var i = 0; i < classes.length; ++i)  {
-        if (!element.classList.contains(classes[i])) {
+        if (!classList.contains(classes[i])) {
           result = false;
           break;
         }
@@ -37,8 +43,9 @@
 
     toggleClass = function(element, classes) {
       classes = classes.split(classSplitReg);
+      var classList = element.classList;
       classes.forEach(function(klass) {
-        element.classList.toggle(klass);
+        classList.toggle(klass);
       });
       return element;
     };
@@ -60,11 +67,13 @@
     };
 
     hasClass = function(element, classes) {
+      if (element.nodeType !== 1) {
+        return false;
+      }
       classes = classes.split(classSplitReg);
       var result = true;
       for (var i = 0; i < classes.length; ++i) {
-        var matcher = new RegExp('(?:^|\\s)' + classes[i] + '(?!\\S)', 'g');
-        if (element.className.match(matcher) === null) {
+        if (element.className.indexOf(classes[i]) === -1) {
           result = false;
           break;
         }
